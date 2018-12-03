@@ -1,9 +1,9 @@
-# You Don't Know JS: Types & Grammar
-# Chapter 3: Natives
+# Вы не знаете JS: Типы и Синтаксис
+# Глава 3: Семейства
 
-Several times in Chapters 1 and 2, we alluded to various built-ins, usually called "natives," like `String` and `Number`. Let's examine those in detail now.
+Несколько раз в первой и второй главах мы обращались к некоторым встроенным механизмам, вроде `String` и `Number` обычно называемыми «семейства». Давайте теперь разберём их более детально.
 
-Here's a list of the most commonly used natives:
+Вот список наиболее часто используемых семейств:
 
 * `String()`
 * `Number()`
@@ -14,11 +14,11 @@ Here's a list of the most commonly used natives:
 * `RegExp()`
 * `Date()`
 * `Error()`
-* `Symbol()` -- added in ES6!
+* `Symbol()` -- добавлено в ES6!
 
-As you can see, these natives are actually built-in functions.
+Как можно заметить эти семейства, по сути, являются встроенными функциями.
 
-If you're coming to JS from a language like Java, JavaScript's `String()` will look like the `String(..)` constructor you're used to for creating string values. So, you'll quickly observe that you can do things like:
+Если подходить к JS уже владея языком, вроде Java, JS функция `String()`  напоминает конструктор `String(..)`, используемый в Java для создания строковых значений. Что ж, давайте сразу убедимся, что мы можем делать приёмы вроде:
 
 ```js
 var s = new String( "Hello World!" );
@@ -26,37 +26,37 @@ var s = new String( "Hello World!" );
 console.log( s.toString() ); // "Hello World!"
 ```
 
-It *is* true that each of these natives can be used as a native constructor. But what's being constructed may be different than you think.
+Да, *действительно* каждое из этих семейств может быть использовано как конструктор. Однако, то что получится, окажется не совсем тем,  что мы ожидаем.
 
 ```js
 var a = new String( "abc" );
 
-typeof a; // "object" ... not "String"
+typeof a; // "object" ... но не "String"
 
 a instanceof String; // true
 
 Object.prototype.toString.call( a ); // "[object String]"
 ```
 
-The result of the constructor form of value creation (`new String("abc")`) is an object wrapper around the primitive (`"abc"`) value.
+Результатом значения, созданного конструктором формы (`new String(“abc”)`) станет объект-обёртка, содержащий примитивное значение `(“abc”)`.
 
-Importantly, `typeof` shows that these objects are not their own special *types*, but more appropriately they are subtypes of the `object` type.
+Важно, что `typeof` указывает, что эти объекты, не собственных специальных *типов*, а скорее подтипы типа `object`.
 
-This object wrapper can further be observed with:
+Этот объект-обёртка впоследствии может быть проверен с помощью:
 
 ```js
 console.log( a );
 ```
 
-The output of that statement varies depending on your browser, as developer consoles are free to choose however they feel it's appropriate to serialize the object for developer inspection.
+Результат этого выражения разнится, в зависимости от используемого браузера, потому что разработчики консолей свободны в выборе, каким наиболее подходящим способом сериализовать объект для инспекции программистом.
 
-**Note:** At the time of writing, the latest Chrome prints something like this: `String {0: "a", 1: "b", 2: "c", length: 3, [[PrimitiveValue]]: "abc"}`. But older versions of Chrome used to just print this: `String {0: "a", 1: "b", 2: "c"}`. The latest Firefox currently prints `String ["a","b","c"]`, but used to print `"abc"` in italics, which was clickable to open the object inspector. Of course, these results are subject to rapid change and your experience may vary.
+**Внимание:** В момент написания, Chrome  последней версии выдавал что-то вроде `String {0: “a”, 1: “b”, 2: “c”, length: 3 [[PrimitiveValue]]: “abc”}`. А, более ранние версии выдавали `String {0: “a”, 1: “b”, 2: “c”}`. Последний Firefox печатает `String ["a","b","c"]`, но ранее выдавал надпись *“abc”* курсивом с возможностью клика по ней, что открывало объект для инспекции. Понятно, что  результаты выдачи могут довольно быстро подвергаться изменениям, и отображения в  консоли могут отличаться.
 
-The point is, `new String("abc")` creates a string wrapper object around `"abc"`, not just the primitive `"abc"` value itself.
+Главное здесь, это то, что выражение `new String("abc")` создаёт объект обёртку, внутри которого находится `”abc”`, а не просто примитивное значение `”abc”`.
 
-## Internal `[[Class]]`
+## Внутренний `[[Class]]`
 
-Values that are `typeof` `"object"` (such as an array) are additionally tagged with an internal `[[Class]]` property (think of this more as an internal *class*ification rather than related to classes from traditional class-oriented coding). This property cannot be accessed directly, but can generally be revealed indirectly by borrowing the default `Object.prototype.toString(..)` method called against the value. For example:
+Такие значения как `typeof` `”object”` (как, к примеру массивы) дополнительно получают свойство `[[Class]]` (правильнее относиться к этому как к внутренней *класс*ификации, а не отношению к классам, как в традиционных классо-ориентированных программах). Это свойство не может быть получено непосредственно, но существует возможность вызвать его косвенно, одолжив встроенный метод `Object.prototype.toString(..)`, вызвав его с соответствующим значением. Например:
 
 ```js
 Object.prototype.toString.call( [1,2,3] );			// "[object Array]"
@@ -64,18 +64,18 @@ Object.prototype.toString.call( [1,2,3] );			// "[object Array]"
 Object.prototype.toString.call( /regex-literal/i );	// "[object RegExp]"
 ```
 
-So, for the array in this example, the internal `[[Class]]` value is `"Array"`, and for the regular expression, it's `"RegExp"`. In most cases, this internal `[[Class]]` value corresponds to the built-in native constructor (see below) that's related to the value, but that's not always the case.
+Итак, для массива в этом примере значение внутреннего `[[Class]]` это `”Array”`, а для регулярного выражения это `”RegExp”`. В большинстве случаев, значение этого внутреннего `[[Class]]` соответствует встроенному конструктору семейства (см. ниже), к которому относится значение, хотя бывают исключения.
 
-What about primitive values? First, `null` and `undefined`:
+Как насчёт примитивных значений? Во-первых `null` и `undefined`:
 
 ```js
 Object.prototype.toString.call( null );			// "[object Null]"
 Object.prototype.toString.call( undefined );	// "[object Undefined]"
 ```
 
-You'll note that there are no `Null()` or `Undefined()` native constructors, but nevertheless the `"Null"` and `"Undefined"` are the internal `[[Class]]` values exposed.
+Следует обратить внимание, что не бывает семейств конструкторов `Null()` и `Undefined()`, тем не менее, нам открываются внутренние значения `[[Class]]` `”Null”` и `”Undefined”`.
 
-But for the other simple primitives like `string`, `number`, and `boolean`, another behavior actually kicks in, which is usually called "boxing" (see "Boxing Wrappers" section next):
+Но, для других значений примитивов вроде `string`, `number`, и `boolean`, определено другое поведение, обычно называемое «упаковка» (см. след. параграф «Обёртки Упаковщики»):
 
 ```js
 Object.prototype.toString.call( "abc" );	// "[object String]"
@@ -83,13 +83,13 @@ Object.prototype.toString.call( 42 );		// "[object Number]"
 Object.prototype.toString.call( true );		// "[object Boolean]"
 ```
 
-In this snippet, each of the simple primitives are automatically boxed by their respective object wrappers, which is why `"String"`, `"Number"`, and `"Boolean"` are revealed as the respective internal `[[Class]]` values.
+В этом фрагменте, каждый из простых примитивов автоматически упаковывается в соответствующий объект-обёртку, поэтому `”String”`, `”Number”` и `”Boolean”` открываются нам в виде значения внутреннего свойства `[[Class]]`.
 
-**Note:** The behavior of `toString()` and `[[Class]]` as illustrated here has changed a bit from ES5 to ES6, but we cover those details in the *ES6 & Beyond* title of this series.
+**Внимание:** Поведение `toString()` и `[[Class]]` в ES5 и ES6 немного отличается, детально мы обсудим это в заглавии *ES6 и далее* этой серии.
 
-## Boxing Wrappers
+## Обёртки Упаковки 
 
-These object wrappers serve a very important purpose. Primitive values don't have properties or methods, so to access `.length` or `.toString()` you need an object wrapper around the value. Thankfully, JS will automatically *box* (aka wrap) the primitive value to fulfill such accesses.
+Эти объекты обёртки играют очень важную роль. Примитивные значения не имеют свойств или методов, поэтому чтобы вызвать `.length` или `toString()`, нам необходим объект обёртка вокруг значения. Замечательно, что JS автоматически *упаковывает* (оборачивает) примитив для доступа к этим свойствам.
 
 ```js
 var a = "abc";
@@ -98,17 +98,17 @@ a.length; // 3
 a.toUpperCase(); // "ABC"
 ```
 
-So, if you're going to be accessing these properties/methods on your string values regularly, like a `i < a.length` condition in a `for` loop for instance, it might seem to make sense to just have the object form of the value from the start, so the JS engine doesn't need to implicitly create it for you.
+Поэтому, если мы собираемся постоянно использовать эти свойства/методы в своих строковых значениях, вроде `i  <  a.length` в циклах `for` к примеру, выглядит убедительным с самого начала иметь значение в форме объекта, чтобы движку JS не было необходимости создавать его для нас.
 
-But it turns out that's a bad idea. Browsers long ago performance-optimized the common cases like `.length`, which means your program will *actually go slower* if you try to "preoptimize" by directly using the object form (which isn't on the optimized path).
+Но, похоже, это не слишком хорошая идея. Браузеры уже давно оптимизированы на выполнение тривиальных задач типа`.length`, и значит наша программа станет  *по сути медленнее*, если мы попытаемся «переоптимизировать» её напрямую используя объектную форму(что не есть оптимизированный подход).
 
-In general, there's basically no reason to use the object form directly. It's better to just let the boxing happen implicitly where necessary. In other words, never do things like `new String("abc")`, `new Number(42)`, etc -- always prefer using the literal primitive values `"abc"` and `42`.
+В основном, обычно нет резона напрямую использовать объектную форму. Проще позволить примитиву «упаковаться» самостоятельно, когда это будет необходимо. Другими словами, никогда не программируйте `new String(“abc”)`, `new Number(42), и т.д.  предпочитая этому литеральные значения примитивов `“abc”` и `42`.
 
-### Object Wrapper Gotchas
+### Изъяны Объектов-Обёрток 
 
-There are some gotchas with using the object wrappers directly that you should be aware of if you *do* choose to ever use them.
+Существует несколько подводных камней при непосредственном использовании объектов-обёрток, о которых вы должны знать, если вы *всё-же* вознамеритесь их использовать.
 
-For example, consider `Boolean` wrapped values:
+Рассмотрим, например значение обёртки `Boolean`:
 
 ```js
 var a = new Boolean( false );
@@ -118,9 +118,9 @@ if (!a) {
 }
 ```
 
-The problem is that you've created an object wrapper around the `false` value, but objects themselves are "truthy" (see Chapter 4), so using the object behaves oppositely to using the underlying `false` value itself, which is quite contrary to normal expectation.
+Проблема в том, что мы создали объект-обёртку для значения `false`, но сами объекты «правдивы» (см. главу 4), поэтому объект ведёт себя иначе по сравнению с его имеющимся `false` значением, что абсолютно противоположно ожиданиям.
 
-If you want to manually box a primitive value, you can use the `Object(..)` function (no `new` keyword):
+Если мы хотим вручную упаковать значение примитива, мы можем использовать функцию `Object(..)` (без использования ключевого слова `new`):
 
 ```js
 var a = "abc";
@@ -138,11 +138,11 @@ Object.prototype.toString.call( b ); // "[object String]"
 Object.prototype.toString.call( c ); // "[object String]"
 ```
 
-Again, using the boxed object wrapper directly (like `b` and `c` above) is usually discouraged, but there may be some rare occasions you'll run into where they may be useful.
+Повторюсь, обычно не советуют напрямую использовать объекты-обёртки (как `b` и `c` в примере выше), только в редких случаях их использование может оказаться кстати.
 
-## Unboxing
+## Распаковка 
 
-If you have an object wrapper and you want to get the underlying primitive value out, you can use the `valueOf()` method:
+Если у нас объект-обёртка и мы хотим получить значение имеющегося примитива мы можем использовать метод `valueOf()`:
 
 ```js
 var a = new String( "abc" );
@@ -154,7 +154,7 @@ b.valueOf(); // 42
 c.valueOf(); // true
 ```
 
-Unboxing can also happen implicitly, when using an object wrapper value in a way that requires the primitive value. This process (coercion) will be covered in more detail in Chapter 4, but briefly:
+Распаковка также происходит опосредованно, когда значение объекта-обёртки используется там, где предполагается значение примитива. Этот процесс (приведение/преобразование) будет рассмотрен детально в главе 4, но на беглый взгляд:
 
 ```js
 var a = new String( "abc" );
@@ -164,11 +164,11 @@ typeof a; // "object"
 typeof b; // "string"
 ```
 
-## Natives as Constructors
+## Семейства как Конструкторы
 
-For `array`, `object`, `function`, and regular-expression values, it's almost universally preferred that you use the literal form for creating the values, but the literal form creates the same sort of object as the constructor form does (that is, there is no nonwrapped value).
+Для `array`, `object`, `function`, и значений регулярных выражений, практически всегда предпочтительно использование литеральной формы для создания значений, но литеральная форма создаёт тот же вид объекта, что и форма конструктора (имеется ввиду, что “необёрнутого” значения не существует).
 
-Just as we've seen above with the other natives, these constructor forms should generally be avoided, unless you really know you need them, mostly because they introduce exceptions and gotchas that you probably don't really *want* to deal with.
+Как мы только что видели с другими семействами, форм конструктора, по возможности, следует избегать, если нам только не обойтись без их использования, в основном из-за того, что в них  присутствуют исключения и изъяны, с которыми, по всей вероятности, нам *не хочется* иметь дела.
 
 ### `Array(..)`
 
@@ -180,21 +180,21 @@ var b = [1, 2, 3];
 b; // [1, 2, 3]
 ```
 
-**Note:** The `Array(..)` constructor does not require the `new` keyword in front of it. If you omit it, it will behave as if you have used it anyway. So `Array(1,2,3)` is the same outcome as `new Array(1,2,3)`.
+**Внимание:** Конструктор `Array(..)` не требует перед собой ключевого слова `new`. Если мы опустим его, он поведёт себя так, будто оно там присутствует. Поэтому `Array(1,2,3)`, это тоже самое, что `new Array (1,2,3)`.
 
-The `Array` constructor has a special form where if only one `number` argument is passed, instead of providing that value as *contents* of the array, it's taken as a length to "presize the array" (well, sorta).
+Конструктор `Array(..)` имеет следующую особенность, если задан только один аргумент `number`, то вместо того, чтобы использовать его значение как *контент* массива, он использует его как длину «задать размер массива» (well sorta).
 
-This is a terrible idea. Firstly, you can trip over that form accidentally, as it's easy to forget.
+Это прескверная идея. Прежде всего, потому что можно случайно задать такую форму, попросту забыв об её существовании.
 
-But more importantly, there's no such thing as actually presizing the array. Instead, what you're creating is an otherwise empty array, but setting the `length` property of the array to the numeric value specified.
+Но, самое странное, что это не возможность «задать размер массива». Вместо этого мы создадим вообще пустой массив, но обозначим его свойство `length`, заданным цифрой значением.
 
-An array that has no explicit values in its slots, but has a `length` property that *implies* the slots exist, is a weird exotic type of data structure in JS with some very strange and confusing behavior. The capability to create such a value comes purely from old, deprecated, historical functionalities ("array-like objects" like the `arguments` object).
+Массив, который не имеет заданных значений в своих ячейках, но имеет свойство `length`, которое *подразумевает* наличие ячеек, это причудливая экзотика  структуры данных в JS, с очень странным и запутанным поведением. Способность создать такое значение осталась исключительно от устаревшей непризнанной функциональности (`”объектов подобных массивам”` вроде объекта `arguments`).
 
-**Note:** An array with at least one "empty slot" in it is often called a "sparse array."
+**Внимание:** Массив, имеющий как минимум одну «пустую ячейку» обычно называется «разрежённый массив».
 
-It doesn't help matters that this is yet another example where browser developer consoles vary on how they represent such an object, which breeds more confusion.
+Также не помогает, а только порождает ещё большую путаницу то, как в консоли разработчиков в браузерах по-разному представляется этот пример.
 
-For example:
+К примеру:
 
 ```js
 var a = new Array( 3 );
@@ -203,9 +203,9 @@ a.length; // 3
 a;
 ```
 
-The serialization of `a` in Chrome is (at the time of writing): `[ undefined x 3 ]`. **This is really unfortunate.** It implies that there are three `undefined` values in the slots of this array, when in fact the slots do not exist (so-called "empty slots" -- also a bad name!).
+Сериализация переменной `a` в Chrome на момент написания книги следующая: `[undefined x 3]`.  **Это реально ужасно.** Здесь как-бы подразумевается: «В ячейках массива присутствует три значения `undefined`, и в то же время никаких ячеек нет (так что, название «пустые ячейки» тоже не подходит!)».
 
-To visualize the difference, try this:
+Чтобы увидеть разницу, попробуем следующее:
 
 ```js
 var a = new Array( 3 );
@@ -218,17 +218,17 @@ b;
 c;
 ```
 
-**Note:** As you can see with `c` in this example, empty slots in an array can happen after creation of the array. Changing the `length` of an array to go beyond its number of actually-defined slot values, you implicitly introduce empty slots. In fact, you could even call `delete b[1]` in the above snippet, and it would introduce an empty slot into the middle of `b`.
+**Внимание:** Как видно в примере с `c`, пустые ячейки в массиве, могут получится после его создания. Изменяя `length` массива чтобы  переопределить значение фактически определёных ячеек мы неявно устанавливаем пустые ячейки. По сути мы даже можем вызвать `delete b[1]`, в последнем примере, и эта команда создаст пустую ячейку  в середине массива `b`.
 
-For `b` (in Chrome, currently), you'll find `[ undefined, undefined, undefined ]` as the serialization, as opposed to `[ undefined x 3 ]` for `a` and `c`. Confused? Yeah, so is everyone else.
+Для `b` (сейчас в Chrome) мы найдём сериализацию `[undefined, undefined, undefined]`, не так как `[undefined x 3]`  для `a` и `c`. Запутались? Что ж, не вы одни.
 
-Worse than that, at the time of writing, Firefox reports `[ , , , ]` for `a` and `c`. Did you catch why that's so confusing? Look closely. Three commas implies four slots, not three slots like we'd expect.
+Ещё хуже, на время написания Firefox для `a` и `c` рапортовал `[ , , , ]`. Ничего не сбивает с толку? Приглядись внимательней. Три запятых означают четыре ячейки, а не три как мы, вообще-то ожидаем.
 
-**What!?** Firefox puts an extra `,` on the end of their serialization here because as of ES5, trailing commas in lists (array values, property lists, etc.) are allowed (and thus dropped and ignored). So if you were to type in a `[ , , , ]` value into your program or the console, you'd actually get the underlying value that's like `[ , , ]` (that is, an array with three empty slots). This choice, while confusing if reading the developer console, is defended as instead making copy-n-paste behavior accurate.
+**Что?!** Firefox добавляет ещё одну  `,` в конец своей сериализации, потому что в ES5 конечные запятые в списках (значения массивов, списки свойств, и т.д.) разрешены (как отброшенные и проигнорированные). Поэтому, если в своей программе или в консоли вы прописали в `a` значение `[ , , , ]`, в действительности вы получите  имеющееся значение вроде `[ , , ]` (что есть массив с тремя пустыми ячейками). Такое предложение, пока  при чтении в консоли разработчика путаница, защитимся выбрав более аккуратную операцию копирования-вставки…
 
-If you're shaking your head or rolling your eyes about now, you're not alone! Shrugs.
+Ты сейчас почесал затылок и повертел глазами от только что прочтённого? Ты не один, расслабься).
 
-Unfortunately, it gets worse. More than just confusing console output, `a` and `b` from the above code snippet actually behave the same in some cases **but differently in others**:
+К несчастью, всё ещё хуже. Более запутанный, чем в предыдущем примере вывод в консоли `a` и `b` ведёт себя одинаково в одних случаях, и **совсем по-разному в других**:
 
 ```js
 a.join( "-" ); // "--"
@@ -238,9 +238,9 @@ a.map(function(v,i){ return i; }); // [ undefined x 3 ]
 b.map(function(v,i){ return i; }); // [ 0, 1, 2 ]
 ```
 
-**Ugh.**
+**Ах.**
 
-The `a.map(..)` call *fails* because the slots don't actually exist, so `map(..)` has nothing to iterate over. `join(..)` works differently. Basically, we can think of it implemented sort of like this:
+Вызов `a.map(..)` не *срабатывает*, потому что ячейки, по сути не существуют, так что `map(..)` нечего итерировать. `join(..)` работает по-другому. В принципе, мы можем размышлять о такой реализованной сортировки примерно так:
 
 ```js
 function fakeJoin(arr,connector) {
@@ -260,36 +260,36 @@ var a = new Array( 3 );
 fakeJoin( a, "-" ); // "--"
 ```
 
-As you can see, `join(..)` works by just *assuming* the slots exist and looping up to the `length` value. Whatever `map(..)` does internally, it (apparently) doesn't make such an assumption, so the result from the strange "empty slots" array is unexpected and likely to cause failure.
+Как видно, `join(..)` действует *предполагая* наличие ячеек и делает цикл по значению `.length`. Что бы ни делал `map(..)`, он (по-видимому) обходится без предположений, поэтому результат от странностей «пустых ячеек» неожидан, и, скорее всего, становится причиной отказа выполнения.
 
-So, if you wanted to *actually* create an array of actual `undefined` values (not just "empty slots"), how could you do it (besides manually)?
+Итак, если ты ищешь *не иначе* как создать массив с именно `undefined` значениями (но не с «пустыми ячейками»), как бы ты мог поступить (если не вручную)?
 
 ```js
 var a = Array.apply( null, { length: 3 } );
 a; // [ undefined, undefined, undefined ]
 ```
 
-Confused? Yeah. Here's roughly how it works.
+Снова запутался? Ну, да, где-то так это работает.
 
-`apply(..)` is a utility available to all functions, which calls the function it's used with but in a special way.
+`apply(..)` это утилита, доступная всем функциям, вызывающим используемые функции особым образом.
 
-The first argument is a `this` object binding (covered in the *this & Object Prototypes* title of this series), which we don't care about here, so we set it to `null`. The second argument is supposed to be an array (or something *like* an array -- aka an "array-like object"). The contents of this "array" are "spread" out as arguments to the function in question.
+Первый аргумент это `this` для связываемого объекта (мы обсуждали это в *this и Прототипы Объектов* этой серии), о котором мы здесь не заботимся поэтому задаём объект `null`. Второй аргумент, предположительно должен быть массивом (или чем-то *вроде* массива, например  «объект подобный массиву»). Содержимое этого «массива» «передаётся» как аргумент для вызываемой функции.
 
-So, `Array.apply(..)` is calling the `Array(..)` function and spreading out the values (of the `{ length: 3 }` object value) as its arguments.
+Так, `Array.apply(..)` вызывает функцию `Array(..)` и передаёт значение (значение объекта `{length: 3}`), как его аргумент.
 
-Inside of `apply(..)`, we can envision there's another `for` loop (kinda like `join(..)` from above) that goes from `0` up to, but not including, `length` (`3` in our case).
+Внутри `apply(..)`мы можем представить какой-нибудь цикл `for` (по аналогии с `join()` чуть ранее), который начинается с нуля `0` и продолжается до (но не включая) `length` (`3` в нашем случае).
 
-For each index, it retrieves that key from the object. So if the array-object parameter was named `arr` internally inside of the `apply(..)` function, the property access would effectively be `arr[0]`, `arr[1]`, and `arr[2]`. Of course, none of those properties exist on the `{ length: 3 }` object value, so all three of those property accesses would return the value `undefined`.
+Для каждого индекса цикл извлекает ключ из объекта. Так, если бы внутри функции `apply(..)` параметром был передан массив-объект `arr`, обращение к свойству получилось бы `arr[0]`, `arr[1]`, и `arr[2]`. Само собой, нет таких свойств в значениях объекта`{ length: 3}` поэтому все три обращения к свойствам вернут `undefined`.
 
-In other words, it ends up calling `Array(..)` basically like this: `Array(undefined,undefined,undefined)`, which is how we end up with an array filled with `undefined` values, and not just those (crazy) empty slots.
+Другими словами вызов функции `Array(..)`, заканчивается, по существу, так `Array(undefined,undefined,undefined)`, результатом чего будет массив заполненный тремя значениями `undefined`, но не теми (беcсмысленными) «пустыми ячейками».
 
-While `Array.apply( null, { length: 3 } )` is a strange and verbose way to create an array filled with `undefined` values, it's **vastly** better and more reliable than what you get with the footgun'ish `Array(3)` empty slots.
+И, хотя `Array.apply(null, {length: 3})` это странный и многословный способ получить массив со значениями `undefined`, он **значительно** лучше и надёжнее чем «пустые ячейки», полученные в ходе самострела `Array(3)`.
 
-Bottom line: **never ever, under any circumstances**, should you intentionally create and use these exotic empty-slot arrays. Just don't do it. They're nuts.
+Подведём итоги: **никогда, нигде, ни при каких обстоятельствах** вам не следует намеренно создавать и использовать столь экзотические массивы пустых ячеек. Просто не делайте этого. Наломаете дров.
 
-### `Object(..)`, `Function(..)`, and `RegExp(..)`
+### `Object(..)`, `Function(..)`, и `RegExp(..)`
 
-The `Object(..)`/`Function(..)`/`RegExp(..)` constructors are also generally optional (and thus should usually be avoided unless specifically called for):
+Применение конструкторов `Object(..)`/`Function(..)`/`Regexp(..)`, тоже не являются обязательным (и тоже не должны использоваться в обычной практике):
 
 ```js
 var c = new Object();
@@ -307,11 +307,11 @@ var h = new RegExp( "^a*b+", "g" );
 var i = /^a*b+/g;
 ```
 
-There's practically no reason to ever use the `new Object()` constructor form, especially since it forces you to add properties one-by-one instead of many at once in the object literal form.
+Практически не видно причин даже использовать конструкторскую форму `new Object()`, из-за того, что она принуждает нас добавлять свойства по одному, а не сразу сколько нужно, как это происходит при создании объекта в форме литерала.
 
-The `Function` constructor is helpful only in the rarest of cases, where you need to dynamically define a function's parameters and/or its function body. **Do not just treat `Function(..)` as an alternate form of `eval(..)`.** You will almost never need to dynamically define a function in this way.
+Конструктор `Function` бывает полезен в очень редких случаях, когда необходимо динамически определить параметры функции и/или её тело. **Только не стоит думать о `Function(..)` как о альтернативной форме `eval(..)`.** Динамически определять функцию таким способом практически никогда не придётся. 
 
-Regular expressions defined in the literal form (`/^a*b+/g`) are strongly preferred, not just for ease of syntax but for performance reasons -- the JS engine precompiles and caches them before code execution. Unlike the other constructor forms we've seen so far, `RegExp(..)` has some reasonable utility: to dynamically define the pattern for a regular expression.
+Регулярные выражения определяемые в форме литерала (`/^a*b+/g`) явно предпочтительней, не только из-за облегчённого синтаксиса, но и по причине прозводительности – движок JS компилирует и сохраняет их перед выполнением кода. Но, в отличие от других конструкторских форм мы уже знаем, что в `RegExp(..)`имеются некоторые применимые утилиты, в частности возможность динамически определить шаблон регулярного выражения.
 
 ```js
 var name = "Kyle";
@@ -320,17 +320,17 @@ var namePattern = new RegExp( "\\b(?:" + name + ")+\\b", "ig" );
 var matches = someText.match( namePattern );
 ```
 
-This kind of scenario legitimately occurs in JS programs from time to time, so you'd need to use the `new RegExp("pattern","flags")` form.
+Такой сценарий, время от времени, вполне оправдан в программах JS, так что использование `RegExp(“pattern”, “flags”)`, бывает необходимым. 
 
-### `Date(..)` and `Error(..)`
+### `Date(..)` и `Error(..)`
 
-The `Date(..)` and `Error(..)` native constructors are much more useful than the other natives, because there is no literal form for either.
+Встроенные конструкторы `Date(..)` и `Error(..)` используются много чаще других семейств, потому что не имеют собственной формы литерала.
 
-To create a date object value, you must use `new Date()`. The `Date(..)` constructor accepts optional arguments to specify the date/time to use, but if omitted, the current date/time is assumed.
+Чтобы получить значение объекта даты мы должны использовать `new Date()`. Конструктор `Date(..)` допускает необязательные аргументы для персонализации возвращаемых даты/времени, но если аргументы не указаны, конструктор возвратит текущее время/дату.
 
-By far the most common reason you construct a date object is to get the current timestamp value (a signed integer number of milliseconds since Jan 1, 1970). You can do this by calling `getTime()` on a date object instance.
+Издавна самый применяемый способ конструкции объекта даты это получение метки времени (целое число в миллисекундах, прошедших с начала отсчёта 01 января 1970 года). Мы можем получить её, вызвав `getTime()` в экземпляре объекта даты.
 
-But an even easier way is to just call the static helper function defined as of ES5: `Date.now()`. And to polyfill that for pre-ES5 is pretty easy:
+Есть даже более лёгкий подход, обыкновенным вызовом статитческой вспомогательной функции определённой в ES5: `Date.now()`. Полифилл для окружения, предшествовавшего ES5 также изящен и прост:
 
 ```js
 if (!Date.now) {
@@ -340,13 +340,13 @@ if (!Date.now) {
 }
 ```
 
-**Note:** If you call `Date()` without `new`, you'll get back a string representation of the date/time at that moment. The exact form of this representation is not specified in the language spec, though browsers tend to agree on something close to: `"Fri Jul 18 2014 00:31:02 GMT-0500 (CDT)"`.
+**Внимание:** Если мы вызовем `Date()` без `new`, он вернёт нам строковое представление даты/времени текущего момента. Точная форма представления в спецификации языка не определена, однако браузеры примерно одинаково возвращают что-то вроде `"Fri Jul 18 2014 00:31:02 GMT-0500 (CDT)"`.
 
-The `Error(..)` constructor (much like `Array()` above) behaves the same with the `new` keyword present or omitted.
+Конструктор `Error(..)` (по аналогии с конструктором `Array(..)` ранее) ведёт себя одинаково как с ключевым словом `new` перед ним так и без него.
 
-The main reason you'd want to create an error object is that it captures the current execution stack context into the object (in most JS engines, revealed as a read-only `.stack` property once constructed). This stack context includes the function call-stack and the line-number where the error object was created, which makes debugging that error much easier.
+Основная причина, по которой мы можем захотеть создать объект ошибки это возможность объекта захватывать текущий стек контекста исполнения в объект (в большинстве движков JS присутствует свойство `.stack` доступное только для чтения). Этот текущий контекст включает в себя функцию вызов-стека и строку где создался объект ошибки, что облегчает отладку этой ошибки.
 
-You would typically use such an error object with the `throw` operator:
+Мы обычно можем использовать этот объект ошибки посредством оператора `throw`:
 
 ```js
 function foo(x) {
@@ -357,23 +357,23 @@ function foo(x) {
 }
 ```
 
-Error object instances generally have at least a `message` property, and sometimes other properties (which you should treat as read-only), like `type`. However, other than inspecting the above-mentioned `stack` property, it's usually best to just call `toString()` on the error object (either explicitly, or implicitly through coercion -- see Chapter 4) to get a friendly-formatted error message.
+Экземпляры объекта ошибки обычно имеют как минимум свойство `message`, и иногда ещё несколько дополнительных свойств (которые мы должны рассматривать как «только для чтения») вроде `type`. В то же время, чтобы получить понятный формат объекта ошибки, вместо проверки обозначенного свойства `.stack`, обычно лучше вызвать метод `toString()` для объекта ошибки (явным или неявным способом, см главу 4).
 
-**Tip:** Technically, in addition to the general `Error(..)` native, there are several other specific-error-type natives: `EvalError(..)`, `RangeError(..)`, `ReferenceError(..)`, `SyntaxError(..)`, `TypeError(..)`, and `URIError(..)`. But it's very rare to manually use these specific error natives. They are automatically used if your program actually suffers from a real exception (such as referencing an undeclared variable and getting a `ReferenceError` error).
+**Совет:** Технически, основное семейство `Error(..)` дополнено несколькими другими семействами с «типовыми-специфическими-ошибками»: `EvalError(..)`, `RangeError(..)`, `ReferenceError(..)`, `SyntaxError(..)`, `TypeError(..)`, и `URIError(..)`. Но «вручную» эти специфические семейства практически не применяются. Они автоматически используются  если наша программа действительно получает исключение (как, например, получение ошибки `ReferenceError`при необъявленной переменной).
 
 ### `Symbol(..)`
 
-New as of ES6, an additional primitive value type has been added, called "Symbol". Symbols are special "unique" (not strictly guaranteed!) values that can be used as properties on objects with little fear of any collision. They're primarily designed for special built-in behaviors of ES6 constructs, but you can also define your own symbols.
+В новом в ES6 было добавлено ещё одно значение примитива, названное “Symbol”. Символы это специальные «уникальные», (но не гарантированно!) значения, которые могут быть использованы как свойства в объекте без опасений относительно конфликта имён. Прежде всего они спроетированы для специально встроенного поведения в конструкции ES6, но мы можем определить свои собственные символы.
 
-Symbols can be used as property names, but you cannot see or access the actual value of a symbol from your program, nor from the developer console. If you evaluate a symbol in the developer console, what's shown looks like `Symbol(Symbol.create)`, for example.
+Символы могут использоваться как имена свойств, но мы не сможем увидеть или получить доступ к значению свойства, как из нашей программы, так и из консоли разработчика. Например, если мы определим символ в консоли разработчика, то отобразится что-то вроде `Symbol(Symbol.create)`.
 
-There are several predefined symbols in ES6, accessed as static properties of the `Symbol` function object, like `Symbol.create`, `Symbol.iterator`, etc. To use them, do something like:
+Несколько предопределённых символов в ES6 доступны как статические свойства объекта функции `Symbol`, как-то `Symbol.create`, `Symbol.iterator` и др. Для их использования сделаем что-то вроде:
 
 ```js
 obj[Symbol.iterator] = function(){ /*..*/ };
 ```
 
-To define your own custom symbols, use the `Symbol(..)` native. The `Symbol(..)` native "constructor" is unique in that you're not allowed to use `new` with it, as doing so will throw an error.
+Чтобы определить собственный символ, надо использовать семейство`Symbol(..)`. Семейство «конструктора» `Symbol(..)` уникально тем, что мы не можем использовать с ним `new`, так как это приведёт к ошибке. 
 
 ```js
 var mysym = Symbol( "my own symbol" );
@@ -388,29 +388,29 @@ Object.getOwnPropertySymbols( a );
 // [ Symbol(my own symbol) ]
 ```
 
-While symbols are not actually private (`Object.getOwnPropertySymbols(..)` reflects on the object and reveals the symbols quite publicly), using them for private or special properties is likely their primary use-case. For most developers, they may take the place of property names with `_` underscore prefixes, which are almost always by convention signals to say, "hey, this is a private/special/internal property, so leave it alone!"
+Хотя символы не являются частными (`Object.getOwnPropertySymbols(..)` отображается объектом, и выражается в публичной форме), их использование в частных или специальных свойствах - основной способ их применения. Большинство разработчиков используют нижнее подчёркивание в префиксе имени, что практически является сигналом соглашения, вроде: «Эй, ты что не видишь, это свойство «частное/специальное/для внутреннего использования», оставь его в покое»!
 
-**Note:** `Symbol`s are *not* `object`s, they are simple scalar primitives.
+**Внимание:** `Symblos`s это *не* `object`s, но обычные скалярные примитивы.
 
-### Native Prototypes
+### Прототипы Семейств 
 
-Each of the built-in native constructors has its own `.prototype` object -- `Array.prototype`, `String.prototype`, etc.
+Каждый из встроенных конструкторов семейств  имеет свои собственные `.prototype` объекты. `Array.prototype`, `String.prototype`, и др.
 
-These objects contain behavior unique to their particular object subtype.
+В эти объектах содержится уникальное поведение для своих конкретных подтипов.
 
-For example, all string objects, and by extension (via boxing) `string` primitives, have access to default behavior as methods defined on the `String.prototype` object.
+Например, все строковые объекты (через упаковку) в дополнение к `string` примитивам имеют доступ к стандартному поведению с методами определёнными в объекте `String.prototype`.
 
-**Note:** By documentation convention, `String.prototype.XYZ` is shortened to `String#XYZ`, and likewise for all the other `.prototype`s.
+**Внимание:** В документации к языку,`String.prototype.XYZ` сокращён до `Stryng#XYZ`, это же относится и к другим `prototype`s.
 
-* `String#indexOf(..)`: find the position in the string of another substring
-* `String#charAt(..)`: access the character at a position in the string
-* `String#substr(..)`, `String#substring(..)`, and `String#slice(..)`: extract a portion of the string as a new string
-* `String#toUpperCase()` and `String#toLowerCase()`: create a new string that's converted to either uppercase or lowercase
-* `String#trim()`: create a new string that's stripped of any trailing or leading whitespace
+* `String#indexOf(..)`: находит позицию подстроки в строке
+* `String#charAt(..)`: определяет характер символа находящегося на указанной позиции
+* `String#substr(..)`, `String#substring(..)`, and `String#slice(..)`: возвращает новую строку из фрагмента заданной.
+* `String#toUpperCase()` and `String#toLowerCase()`: создаёт новую строку конвертируя заданную в верхний или нижний регистр
+* `String#trim()`: создаёт новую строку, удаляя все пробелы.
 
-None of the methods modify the string *in place*. Modifications (like case conversion or trimming) create a new value from the existing value.
+Примечательно, что методы преобразовывают строки *здесь и сейчас*. Преобразования (как в случае с конвертацией или триммингом) создают новое значение из существующего.
 
-By virtue of prototype delegation (see the *this & Object Prototypes* title in this series), any string value can access these methods:
+В силу делегирования прототипам (смотри *this  и Прототипы Объектов* этой серии), любое строковое значение имеет доступ к этим методам:
 
 ```js
 var a = " abc ";
@@ -420,9 +420,9 @@ a.toUpperCase(); // " ABC "
 a.trim(); // "abc"
 ```
 
-The other constructor prototypes contain behaviors appropriate to their types, such as `Number#toFixed(..)` (stringifying a number with a fixed number of decimal digits) and `Array#concat(..)` (merging arrays). All functions have access to `apply(..)`, `call(..)`, and `bind(..)` because `Function.prototype` defines them.
+Остальные прототипы конструкторов содержат поведение предназначенное для их типов, к примеру `Number#toFixed(..)` (преобразовывает число соответствующее ему с определённым количеством цифр после запятой), или `Array#concat(..)` (объединяет массивы). Все функции также имеют доступ к  `apply(..)`, `call(..)`, и `bind(..)`, потому что они определены с помощью `Function.prototype`.
 
-But, some of the native prototypes aren't *just* plain objects:
+Однако, некоторые из семейств прототипов не *совсем* являются обычными объектами:
 
 ```js
 typeof Function.prototype;			// "function"
@@ -432,7 +432,7 @@ RegExp.prototype.toString();		// "/(?:)/" -- empty regex
 "abc".match( RegExp.prototype );	// [""]
 ```
 
-A particularly bad idea, you can even modify these native prototypes (not just adding properties as you're probably familiar with):
+Это плохая идея, но мы можем даже переопределить эти прототипы семейств (не просто добавить свойства, как вы, наверняка умеете):
 
 ```js
 Array.isArray( Array.prototype );	// true
@@ -444,13 +444,13 @@ Array.prototype;					// [1,2,3]
 Array.prototype.length = 0;
 ```
 
-As you can see, `Function.prototype` is a function, `RegExp.prototype` is a regular expression, and `Array.prototype` is an array. Interesting and cool, huh?
+Также можно заметить, что `Function.prototype` это функция, `RegExp.prototype` это регулярное выражение, и `Array.prototype` это массив. Здорово и познавательно, правда?
 
-#### Prototypes As Defaults
+#### Прототипы как значения по умолчанию 
 
-`Function.prototype` being an empty function, `RegExp.prototype` being an "empty" (e.g., non-matching) regex, and `Array.prototype` being an empty array, make them all nice "default" values to assign to variables if those variables wouldn't already have had a value of the proper type.
+`Function.prototype` становится пустой функцией, `Regexp.prototype` становится «пустым» (например не имеющим соответствия) регулярным выражением, а `Array.prototype` становится пустым массивом, что делает их замечательными «значениями по умолчанию» для задания к переменным, если эти переменные не должны сразу иметь значение соответствующего типа.
 
-For example:
+Например:
 
 ```js
 function isThisCool(vals,fn,rx) {
@@ -472,16 +472,16 @@ isThisCool(
 );					// false
 ```
 
-**Note:** As of ES6, we don't need to use the `vals = vals || ..` default value syntax trick (see Chapter 4) anymore, because default values can be set for parameters via native syntax in the function declaration (see Chapter 5).
+**Внимание:** Начиная с ES6, у нас больше нет необходимости использовать синтаксический приём конструкции значения по умолчанию `vals = vals || …` (см. главу 4), потому что значения по умолчанию могут быть присвоены параметрам через встроенный синтаксис при определении функции (см. главу 5).
 
-One minor side-benefit of this approach is that the `.prototype`s are already created and built-in, thus created *only once*. By contrast, using `[]`, `function(){}`, and `/(?:)/` values themselves for those defaults would (likely, depending on engine implementations) be recreating those values (and probably garbage-collecting them later) for *each call* of `isThisCool(..)`. That could be memory/CPU wasteful.
+В этом подходе есть небольшой побочный эффект, `prototype`s уже были созданы и встроены, как *разово* созданные. Для контраста, использование самих значений `[]`, `function(){}`, и `/(?:)/` этими «значениями по умолчанию» опять создаст (вероятно, в зависимости от реализации движка) те значения (и вероятно сборщика мусора для них) при *каждом вызове* `isThisCool(..)`. Это  немного расточительно для памяти/процессора.
 
-Also, be very careful not to use `Array.prototype` as a default value **that will subsequently be modified**. In this example, `vals` is used read-only, but if you were to instead make in-place changes to `vals`, you would actually be modifying `Array.prototype` itself, which would lead to the gotchas mentioned earlier!
+Также, стоит быть очень осмотрительным и не использовать `Array.prototype` как значение по умолчанию, **которое впоследствии будет изменено**. В примере выше `vals` использовано только для чтения, но если бы мы по месту внесли изменения в `vals`, мы изменили бы сам `Array.prototype`, что привело бы к изъянам описанным для массивов ранее!
 
-**Note:** While we're pointing out these native prototypes and some usefulness, be cautious of relying on them and even more wary of modifying them in anyway. See Appendix A "Native Prototypes" for more discussion.
+**Внимание:** Хоть мы и упоминаем здесь прототипы семейств, и некоторые их полезноти, будь внимательным, если обращаешься к ним, и даже осторожным, когда пытаешься преобразовать их любым способом. Смотри Приложение А «Прототипы Семейств» для более детального обсуждения.
 
-## Review
+## Обзор
 
-JavaScript provides object wrappers around primitive values, known as natives (`String`, `Number`, `Boolean`, etc). These object wrappers give the values access to behaviors appropriate for each object subtype (`String#trim()` and `Array#concat(..)`).
+Javascript обеспечивает объекты-обёртки известные как семейства (`String`, `Number`, `Boolean`, и др.) вокруг примитивных значений. Эти объекты обёртки дают значениям доступ к, свойствам предназначенным для подтипов каждого такого объекта (`String#trim()`, `Array#concat(..)` ).
 
-If you have a simple scalar primitive value like `"abc"` and you access its `length` property or some `String.prototype` method, JS automatically "boxes" the value (wraps it in its respective object wrapper) so that the property/method accesses can be fulfilled.
+Если есть обычное скалярное значение примитива вроде `”abc”` и мы вызываем его свойство `length` или другой `String.prototype` метод, JS автоматически «упаковывает» значение (оборачивает его в соответствующий объект-обёртку), поэтому обращение к этому свойство/методу может осуществляться.
